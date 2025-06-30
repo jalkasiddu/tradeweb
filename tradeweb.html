@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trader's Blueprint</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background-color: #f3f4f6; /* Light gray background */
+            color: #333;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        header {
+            background: linear-gradient(to right, #4f46e5, #3b82f6); /* Indigo to Blue gradient */
+            color: white;
+            padding: 1.5rem 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        header h1 {
+            font-size: 2.25rem; /* 36px */
+            font-weight: 800; /* Extra bold */
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        header .user-id {
+            font-size: 0.875rem; /* 14px */
+            opacity: 0.9;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        nav button {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        nav button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        nav button.active {
+            background-color: white;
+            color: #4f46e5; /* Indigo */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: scale(1.05);
+        }
+
+        main {
+            padding: 1rem;
+        }
+
+        .tab-content {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            min-height: 60vh;
+            background-image: linear-gradient(to bottom right, #ffffff, #f0f4f8); /* Subtle gradient */
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e2e8f0; /* Light border */
+        }
+
+        .card h3 {
+            font-size: 1.5rem; /* 24px */
+            font-weight: 600; /* Semi-bold */
+            color: #2d3748; /* Dark gray */
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #edf2f7; /* Light border */
+            padding-bottom: 0.5rem;
+        }
+
+        .grid-cols-1 {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .md\:grid-cols-2 {
+            display: grid;
+            grid-template-columns: 1fr; /* Default for mobile */
+            gap: 1rem;
+        }
+
+        .lg\:grid-cols-3 {
+            display: grid;
+            grid-template-columns: 1fr; /* Default for mobile */
+            gap: 1rem;
+        }
+
+        @media (min-width: 768px) { /* Medium screens */
+            .md\:grid-cols-2 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .md\:col-span-2 {
+                grid-column: span 2 / span 2;
+            }
+        }
+
+        @media (min-width: 1024px) { /* Large screens */
+            .lg\:grid-cols-3 {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+            .lg\:col-span-1 {
+                grid-column: span 1 / span 1;
+            }
+        }
+
+        .text-lg {
+            font-size: 1.125rem; /* 18px */
+        }
+
+        .font-semibold {
+            font-weight: 600;
+        }
+
+        .font-bold {
+            font-weight: 700;
+        }
+
+        .text-green-600 { color: #22c55e; }
+        .text-red-600 { color: #ef4444; }
+        .text-indigo-600 { color: #4f46e5; }
+        .text-blue-600 { color: #3b82f6; }
+        .text-purple-600 { color: #9333ea; }
+        .text-purple-700 { color: #7e22ce; }
+        .text-gray-700 { color: #4a5568; }
+        .text-gray-800 { color: #2d3748; }
+        .text-gray-900 { color: #1a202c; }
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        .mb-2 { margin-bottom: 0.5rem; }
+        .mb-4 { margin-bottom: 1rem; }
+        .mb-6 { margin-bottom: 1.5rem; }
+        .mb-8 { margin-bottom: 2rem; }
+        .mt-1 { margin-top: 0.25rem; }
+        .mt-2 { margin-top: 0.5rem; }
+        .mt-4 { margin-top: 1rem; }
+        .mt-6 { margin-top: 1.5rem; }
+        .mt-8 { margin-top: 2rem; }
+        .p-4 { padding: 1rem; }
+        .p-6 { padding: 1.5rem; }
+        .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+        .px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+        .px-4 { padding-left: 1rem; padding-right: 1rem; }
+        .py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+        .px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+        .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+        .w-full { width: 100%; }
+        .h-4 { height: 1rem; }
+        .rounded-full { border-radius: 9999px; }
+        .rounded-lg { border-radius: 0.5rem; }
+        .rounded-xl { border-radius: 0.75rem; }
+        .rounded-b-xl { border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem; }
+        .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+        .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+        .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+        .border { border-width: 1px; }
+        .border-gray-200 { border-color: #e2e8f0; }
+        .border-red-400 { border-color: #f87171; }
+        .border-b-2 { border-bottom-width: 2px; }
+        .bg-white { background-color: white; }
+        .bg-gray-50 { background-color: #f9fafb; }
+        .bg-gray-100 { background-color: #f3f4f6; }
+        .bg-red-100 { background-color: #fee2e2; }
+        .bg-gray-200 { background-color: #e5e7eb; }
+        .bg-purple-600 { background-color: #9333ea; }
+        .bg-blue-500 { background-color: #3b82f6; }
+        .bg-gray-500 { background-color: #6b7280; }
+        .hover\:bg-blue-600:hover { background-color: #2563eb; }
+        .hover\:bg-gray-600:hover { background-color: #4b5563; }
+        .hover\:bg-indigo-700:hover { background-color: #4338ca; }
+        .text-white { color: white; }
+        .focus\:outline-none:focus { outline: 0; }
+        .focus\:ring-2:focus { box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.5); }
+        .focus\:ring-indigo-500:focus { border-color: #6366f1; }
+        .focus\:ring-offset-2:focus { box-shadow: 0 0 0 2px white, 0 0 0 4px rgba(99, 102, 241, 0.5); }
+        .transition { transition-property: all; transition-duration: 0.15s; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+        .duration-150 { transition-duration: 0.15s; }
+        .ease-in-out { transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+        .flex { display: flex; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-end { justify-content: flex-end; }
+        .items-center { align-items: center; }
+        .flex-col { flex-direction: column; }
+        .md\:flex-row { flex-direction: column; /* Default for mobile */ }
+        @media (min-width: 768px) { .md\:flex-row { flex-direction: row; } }
+        .gap-2 { gap: 0.5rem; }
+        .gap-4 { gap: 1rem; }
+        .gap-6 { gap: 1.5rem; }
+        .opacity-90 { opacity: 0.9; }
+        .font-mono { font-family: monospace; }
+        .animate-spin { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .relative { position: relative; }
+        .absolute { position: absolute; }
+        .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+        .overflow-y-auto { overflow-y: auto; }
+        .h-full { height: 100%; }
+        .w-full { width: 100%; }
+        .z-50 { z-index: 50; }
+        .max-w-lg { max-width: 32rem; /* 512px */ }
+        .mx-auto { margin-left: auto; margin-right: auto; }
+        .max-h-80 { max-height: 20rem; /* 320px */ }
+        .bg-gray-600 { background-color: #4b5563; }
+        .bg-opacity-50 { background-color: rgba(75, 85, 99, 0.5); }
+        .block { display: block; }
+        .sm\:inline { display: block; /* Default for mobile */ }
+        @media (min-width: 640px) { .sm\:inline { display: inline; } }
+        .ml-2 { margin-left: 0.5rem; }
+        .min-h-screen { min-height: 100vh; }
+        .antialiased { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .from-blue-50 { background-image: linear-gradient(to bottom right, var(--tw-gradient-stops)); --tw-gradient-stops: #eff6ff, var(--tw-gradient-to, rgba(239, 246, 255, 0)); }
+        .to-indigo-100 { --tw-gradient-to: #e0e7ff; }
+        .from-green-50 { background-image: linear-gradient(to bottom right, var(--tw-gradient-stops)); --tw-gradient-stops: #f0fdf4, var(--tw-gradient-to, rgba(240, 253, 244, 0)); }
+        .to-blue-100 { --tw-gradient-to: #dbeafe; }
+        .from-yellow-50 { background-image: linear-gradient(to bottom right, var(--tw-gradient-stops)); --tw-gradient-stops: #fefce8, var(--tw-gradient-to, rgba(254, 252, 232, 0)); }
+        .to-orange-100 { --tw-gradient-to: #ffedd5; }
+        .from-red-50 { background-image: linear-gradient(to bottom right, var(--tw-gradient-stops)); --tw-gradient-stops: #fef2f2, var(--tw-gradient-to, rgba(254, 242, 242, 0)); }
+        .to-pink-100 { --tw-gradient-to: #fce7f3; }
+        .from-purple-50 { background-image: linear-gradient(to bottom right, var(--tw-gradient-stops)); --tw-gradient-stops: #faf5ff, var(--tw-gradient-to, rgba(250, 245, 255, 0)); }
+        .to-indigo-100 { --tw-gradient-to: #e0e7ff; } /* Duplicate, ensure it's correct context */
+
+        /* Specific input/select/textarea styling */
+        input, select, textarea {
+            border: 1px solid #cbd5e0; /* Light gray border */
+            padding: 0.625rem 0.75rem; /* 10px 12px */
+            border-radius: 8px;
+            width: 100%;
+            box-sizing: border-box; /* Include padding and border in element's total width and height */
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #6366f1; /* Indigo focus border */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); /* Light indigo ring */
+            outline: none;
+        }
+
+        /* Table specific styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 0.75rem 1.5rem; /* 12px 24px */
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background-color: #f9fafb;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.75rem; /* 12px */
+            color: #718096;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #fdfdfd; /* Slightly different background for even rows */
+        }
+
+        tbody tr:hover {
+            background-color: #f0f4f8; /* Hover effect */
+        }
+
+        /* Button styles */
+        button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.625rem 1rem; /* 10px 16px */
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out, transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            text-decoration: none; /* For buttons that might act as links */
+        }
+
+        /* Specific button colors */
+        .bg-indigo-600 { background-color: #4f46e5; color: white; }
+        .bg-indigo-600:hover { background-color: #4338ca; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .bg-blue-500 { background-color: #3b82f6; color: white; }
+        .bg-blue-500:hover { background-color: #2563eb; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .bg-gray-500 { background-color: #6b7280; color: white; }
+        .bg-gray-500:hover { background-color: #4b5563; transform: translateY(-1px); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .text-indigo-600 { color: #4f46e5; }
+        .text-indigo-600:hover { color: #4338ca; }
+        .text-red-600 { color: #ef4444; }
+        .text-red-600:hover { color: #dc2626; }
+
+        /* Progress bar */
+        .progress-bar-container {
+            background-color: #e2e8f0;
+            border-radius: 9999px;
+            height: 1rem;
+            width: 100%;
+        }
+        .progress-bar-fill {
+            background-color: #9333ea;
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* Utility classes for specific sections */
+        .dashboard-bg { background-image: linear-gradient(to bottom right, #e0e7ff, #f0f4f8); }
+        .long-term-bg { background-image: linear-gradient(to bottom right, #dbeafe, #f0fdf4); }
+        .swing-bg { background-image: linear-gradient(to bottom right, #ffedd5, #fefce8); }
+        .day-trading-bg { background-image: linear-gradient(to bottom right, #fce7f3, #fef2f2); }
+        .business-fund-bg { background-image: linear-gradient(to bottom right, #e0e7ff, #faf5ff); }
+        .analytics-bg { background-image: linear-gradient(to bottom right, #e0e7ff, #eef2ff); }
+        .strategies-bg { background-image: linear-gradient(to bottom right, #f0f9ff, #e0e7ff); }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Trader's Blueprint</h1>
+            <div class="user-id">User ID: local-user</div>
+            <nav id="main-nav">
+                <button data-tab="dashboard" class="active">Dashboard</button>
+                <button data-tab="longTerm">Long-Term</button>
+                <button data-tab="swingTrading">Swing Trading</button>
+                <button data-tab="dayTrading">Day Trading</button>
+                <button data-tab="businessFund">Business Fund</button>
+                <button data-tab="analytics">Analytics</button>
+                <button data-tab="strategiesAndRules">Strategies & Rules</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div id="tab-content-container" class="tab-content">
+            <!-- Content will be loaded here by JavaScript -->
+        </div>
+    </main>
+
+    <script>
+        // --- Global State and Local Storage Management ---
+        let allData = {
+            longTermInvestments: [],
+            swingTrades: [],
+            dayTrades: [],
+            dashboardSettings: { marketRegime: 'Neutral' },
+            analyticsSettings: { peakCapital: 1000000 }, // Default initial capital for peak
+            strategiesAndRules: { // New section for strategies and rules
+                longTerm: {
+                    strategies: "Buy & hold, systematic investing (SIPs).",
+                    rules: "Invest in quality assets, rebalance periodically, avoid emotional decisions.",
+                    notes: "Focus on long-term wealth creation (5+ years)."
+                },
+                swingTrading: {
+                    strategies: "Trend following, breakout trading, mean reversion.",
+                    rules: "EMA Alignment, Volume Spike, Breakout/Breakdown levels, Pre-defined Target Price & Stop Loss, Favorable R:R (e.g., 1:2+).",
+                    notes: "Journaling trades, post-trade analysis. Capture short-to-medium term price movements (days to weeks)."
+                },
+                dayTrading: {
+                    strategies: "Scalping, momentum trading, range trading.",
+                    rules: "Strict Daily Max Loss (e.g., ₹3000). Document Action Triggered (Entry Criteria Met, SL Hit, Target Hit, Time-Based Exit, Manual Exit). Intraday EMA Alignment, Volume Spike confirmation. Maintain positive R:R.",
+                    notes: "Focus on discipline, quick decision-making, managing emotions. Trades closed within the day."
+                },
+                businessFund: {
+                    strategies: "Compounding, disciplined contribution.",
+                    rules: "50% of net trading profit (Swing + Day Trading P&L) goes to the business fund. Set a cumulative target (e.g., ₹300,000 - ₹500,000 by July 1, 2026).",
+                    notes: "Long-term vision, diversification of income."
+                }
+            }
+        };
+
+        const LOCAL_STORAGE_KEY = 'tradingTrackerDataHTML';
+        const INITIAL_OVERALL_CAPITAL = 1000000; // Fixed initial capital for analytics
+
+        function loadData() {
+            try {
+                const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+                if (storedData) {
+                    const parsedData = JSON.parse(storedData);
+                    allData = {
+                        longTermInvestments: parsedData.longTermInvestments || [],
+                        swingTrades: parsedData.swingTrades || [],
+                        dayTrades: parsedData.dayTrades || [],
+                        dashboardSettings: parsedData.dashboardSettings || { marketRegime: 'Neutral' },
+                        analyticsSettings: parsedData.analyticsSettings || { peakCapital: INITIAL_OVERALL_CAPITAL },
+                        strategiesAndRules: parsedData.strategiesAndRules || allData.strategiesAndRules // Load or use default
+                    };
+                }
+            } catch (error) {
+                console.error("Failed to load data from localStorage:", error);
+            }
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allData));
+            } catch (error) {
+                console.error("Failed to save data to localStorage:", error);
+            }
+        }
+
+        // --- Utility Functions ---
+        const formatCurrency = (amount) => {
+            if (typeof amount !== 'number' || isNaN(amount)) return '₹ N/A';
+            return `₹ ${amount.toLocaleString('en-IN', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+        };
+
+        const formatPercentage = (value) => {
+            if (typeof value !== 'number' || isNaN(value)) return 'N/A';
+            return `${(value * 100).toFixed(2)}%`;
+        };
+
+        const prepareAndDownloadOrCopyData = (filename, headers, data, action) => {
+            if (!data || data.length === 0) {
+                alert("No data to export/copy.");
+                return;
+            }
+
+            const separator = action === 'download' ? ',' : '\t';
+            const lineBreak = '\n';
+
+            const processedHeaders = headers.map(header => `"${header.replace(/"/g, '""')}"`).join(separator);
+
+            const processedRows = data.map(row => {
+                return headers.map(header => {
+                    let value;
+                    const normalizedHeader = header.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+                    if (header === 'P&L (₹)') {
+                        value = row.pnl;
+                    } else if (header === 'P&L (%)') {
+                        if (row.type === 'Index ETF' || row.type === 'Bluechip Stocks' || row.type === 'Midcap Leaders' || row.type === 'Thematic ETFs') {
+                            const pnl = ((row.currentPrice || 0) * (row.quantity || 0)) - ((row.avgBuyPrice || 0) * (row.quantity || 0));
+                            value = (row.avgBuyPrice > 0 && row.quantity > 0) ? pnl / (row.avgBuyPrice * row.quantity) : 0;
+                        } else {
+                            value = (row.pnl !== null && row.entryPrice > 0 && row.size > 0) ? row.pnl / (row.entryPrice * row.size) : 0;
+                        }
+                    } else if (header === 'Market Value') {
+                        value = (row.currentPrice || 0) * (row.quantity || 0);
+                    } else if (header === 'Risk (₹)') {
+                        value = row.risk;
+                    } else if (header === 'RR Planned') {
+                        value = row.rrPlanned;
+                    } else if (header === 'RR Achieved') {
+                        value = row.rrAchieved;
+                    } else if (header === 'Holding Period (Days)') {
+                        value = row.date && row.exitDate ? Math.floor((new Date(row.exitDate) - new Date(row.date)) / (1000 * 60 * 60 * 24)) : 'N/A';
+                    } else if (header === 'Daily Max Loss (Day Trading)') {
+                        value = row.dailyMaxLossDayTrading;
+                    } else if (header === 'Action Triggered') {
+                        value = row.actionTriggered;
+                    } else if (header === 'Total Trades') {
+                        value = row.totalTrades;
+                    } else if (header === 'Win Rate (%)') {
+                        value = row.winRate;
+                    } else if (header === 'Avg RR') {
+                        value = row.avgRr;
+                    } else if (header === 'Total P&L (₹)') {
+                        value = row.totalPnl;
+                    } else if (header === 'Swing P&L (₹)') {
+                        value = row.swingPnl;
+                    } else if (header === 'Day P&L (₹)') {
+                        value = row.dayPnl;
+                    } else if (header === 'Long-Term P&L (₹)') {
+                        value = row.longTermPnl;
+                    } else if (header === 'Notes/Lessons') {
+                        value = row.notes;
+                    } else if (header === 'Net Trading Profit (₹)') {
+                        value = row.netTradingProfit;
+                    } else if (header === 'Reinvested (50%)') {
+                        value = row.reinvested;
+                    } else if (header === 'Business Fund Contribution (50%)') {
+                        value = row.contribution;
+                    } else if (header === 'Total Business Fund (Cumulative)') {
+                        value = row.totalBusinessFund;
+                    } else if (header === 'EMA Alignment') {
+                        value = row.emaAlignment;
+                    } else if (header === 'Volume Spike') {
+                        value = row.volumeSpike;
+                    } else if (header === 'Breakout Price') {
+                        value = row.breakoutPrice;
+                    } else if (header === 'Target Price') {
+                        value = row.targetPrice;
+                    } else if (header === 'Stop Loss Level') {
+                        value = row.stopLossLevel;
+                    } else if (header === 'Score') {
+                        value = row.score;
+                    } else {
+                        value = row[Object.keys(row).find(key => key.toLowerCase() === normalizedHeader)] || '';
+                    }
+
+                    if (typeof value === 'number') {
+                        if (header.includes('Win Rate (%)') || header.includes('Current Drawdown (%)')) {
+                            value = (value * 100).toFixed(2);
+                        } else if (header.includes('RR Planned') || header.includes('RR Achieved')) {
+                            value = value.toFixed(2);
+                        } else {
+                            value = value.toFixed(2);
+                        }
+                    } else if (value === null || value === undefined) {
+                        value = '';
+                    }
+
+                    let stringValue = String(value);
+                    if (stringValue.includes(separator) || stringValue.includes('"') || stringValue.includes('\n')) {
+                        stringValue = `"${stringValue.replace(/"/g, '""')}"`;
+                    }
+                    return stringValue;
+                }).join(separator);
+            });
+
+            const content = [processedHeaders, ...processedRows].join(lineBreak);
+
+            if (action === 'download') {
+                const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                if (link.download !== undefined) {
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', filename);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            } else if (action === 'copy') {
+                const textarea = document.createElement('textarea');
+                textarea.value = content;
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    alert('Data copied to clipboard!');
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                    alert('Failed to copy data to clipboard. Please try manually.');
+                }
+                document.body.removeChild(textarea);
+            }
+        };
+
+        // --- Tab Content Rendering Functions ---
+
+        function renderDashboard() {
+            const { longTermInvestments, swingTrades, dayTrades, dashboardSettings } = allData;
+
+            let currentLongTermValue = 0;
+            let totalLongTermPnl = 0;
+            longTermInvestments.forEach(inv => {
+                const marketValue = (inv.currentPrice || 0) * (inv.quantity || 0);
+                const pnl = marketValue - ((inv.avgBuyPrice || 0) * (inv.quantity || 0));
+                currentLongTermValue += marketValue;
+                totalLongTermPnl += pnl;
+            });
+
+            let totalSwingPnl = 0;
+            swingTrades.forEach(trade => {
+                if (!isNaN(trade.pnl)) totalSwingPnl += parseFloat(trade.pnl);
+            });
+
+            let totalDayTradingPnl = 0;
+            dayTrades.forEach(trade => {
+                if (!isNaN(trade.pnl)) totalDayTradingPnl += parseFloat(trade.pnl);
+            });
+
+            const netTradingProfit = totalSwingPnl + totalDayTradingPnl;
+            const currentBusinessFund = netTradingProfit * 0.5;
+
+            const totalOverallPnl = totalLongTermPnl + totalSwingPnl + totalDayTradingPnl;
+            const currentTotalCapital = 1000000 + totalOverallPnl; // Assuming initial capital is 1,000,000
+
+            const initialAllocations = {
+                longTerm: 500000,
+                swing: 400000,
+                dayTrading: 100000,
+            };
+
+            const marketRegime = dashboardSettings.marketRegime || 'Neutral';
+            const adjustedSwingAllocation = marketRegime === 'Bear' ? initialAllocations.swing * 0.5 : initialAllocations.swing;
+            const adjustedDayTradingAllocation = marketRegime === 'Bear' ? initialAllocations.dayTrading * 0.5 : initialAllocations.dayTrading;
+
+            document.getElementById('tab-content-container').innerHTML = `
+                <div class="p-6 dashboard-bg min-h-screen rounded-xl">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-8 text-center">Dashboard</h2>
+
+                    <div class="grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="card col-span-1 md:col-span-2 lg:col-span-1">
+                            <h3>Overall Capital Summary</h3>
+                            <p class="text-gray-700 text-lg mb-2">Initial Capital: <span class="font-semibold">${formatCurrency(1000000)}</span></p>
+                            <p class="text-gray-700 text-lg mb-2">Current Total Capital: <span class="font-bold text-indigo-600">${formatCurrency(currentTotalCapital)}</span></p>
+                            <p class="text-lg ${totalOverallPnl >= 0 ? 'text-green-600' : 'text-red-600'}">Total P&L (All Time): <span class="font-bold">${formatCurrency(totalOverallPnl)}</span></p>
+                        </div>
+
+                        <div class="card col-span-1 md:col-span-1 lg:col-span-1">
+                            <h3>Bucket Allocations</h3>
+                            <p class="text-gray-700 text-lg mb-2">Long-Term Allocation: <span class="font-semibold">${formatCurrency(initialAllocations.longTerm)}</span></p>
+                            <p class="text-gray-700 text-lg mb-2">Swing Allocation: <span class="font-semibold">${formatCurrency(initialAllocations.swing)}</span></p>
+                            <p class="text-gray-700 text-lg mb-2">Day Trading Allocation: <span class="font-semibold">${formatCurrency(initialAllocations.dayTrading)}</span></p>
+                            <p class="text-gray-700 text-lg mb-2">Adjusted Swing Allocation (Based on Market): <span class="font-bold text-blue-600">${formatCurrency(adjustedSwingAllocation)}</span></p>
+                            <p class="text-gray-700 text-lg">Adjusted Day Trading Allocation (Based on Market): <span class="font-bold text-blue-600">${formatCurrency(adjustedDayTradingAllocation)}</span></p>
+                        </div>
+
+                        <div class="card col-span-1 md:col-span-2 lg:col-span-1">
+                            <h3>Bucket Values & P&L</h3>
+                            <p class="text-gray-700 text-lg mb-2">Current Long-Term Value: <span class="font-semibold">${formatCurrency(currentLongTermValue)}</span></p>
+                            <p class="text-lg mb-4 ${totalLongTermPnl >= 0 ? 'text-green-600' : 'text-red-600'}">Long-Term P&L: <span class="font-bold">${formatCurrency(totalLongTermPnl)}</span></p>
+
+                            <p class="text-gray-700 text-lg mb-2">Current Swing Value (Estimated): <span class="font-semibold">${formatCurrency(initialAllocations.swing + totalSwingPnl)}</span></p>
+                            <p class="text-lg mb-4 ${totalSwingPnl >= 0 ? 'text-green-600' : 'text-red-600'}">Swing Trading P&L: <span class="font-bold">${formatCurrency(totalSwingPnl)}</span></p>
+
+                            <p class="text-gray-700 text-lg mb-2">Current Day Trading Value (Estimated): <span class="font-semibold">${formatCurrency(initialAllocations.dayTrading + totalDayTradingPnl)}</span></p>
+                            <p class="text-lg ${totalDayTradingPnl >= 0 ? 'text-green-600' : 'text-red-600'}">Day Trading P&L: <span class="font-bold">${formatCurrency(totalDayTradingPnl)}</span></p>
+                        </div>
+
+                        <div class="card col-span-1 md:col-span-2">
+                            <h3>Business Fund & Market Regime</h3>
+                            <p class="text-gray-700 text-lg mb-4">Current Business Fund (Cumulative): <span class="font-bold text-purple-600">${formatCurrency(currentBusinessFund)}</span></p>
+                            <div class="mb-4">
+                                <label for="marketRegime" class="block text-gray-700 text-sm font-bold mb-2">Market Regime</label>
+                                <select id="marketRegime" class="shadow appearance-none border rounded-lg w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                                    <option value="Bull" ${marketRegime === 'Bull' ? 'selected' : ''}>Bull</option>
+                                    <option value="Neutral" ${marketRegime === 'Neutral' ? 'selected' : ''}>Neutral</option>
+                                    <option value="Bear" ${marketRegime === 'Bear' ? 'selected' : ''}>Bear</option>
+                                </select>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-2">Adjusted allocations reflect capital changes based on selected market regime (Bear regime reduces Swing/Day Trading capital by 50%).</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('marketRegime').addEventListener('change', (e) => {
+                allData.dashboardSettings.marketRegime = e.target.value;
+                saveData();
+                renderDashboard(); // Re-render to update adjusted allocations
+            });
+        }
+
+        function renderLongTermInvestments() {
+            const investments = allData.longTermInvestments;
+            let editingId = null;
+
+            const getFormValues = () => {
+                return {
+                    type: document.getElementById('type').value,
+                    symbol: document.getElementById('symbol').value,
+                    quantity: document.getElementById('quantity').value,
+                    avgBuyPrice: document.getElementById('avgBuyPrice').value,
+                    currentPrice: document.getElementById('currentPrice').value,
+                    date: document.getElementById('date').value,
+                    notes: document.getElementById('notes').value,
+                };
+            };
+
+            const setFormValues = (data) => {
+                document.getElementById('type').value = data.type || 'Index ETF';
+                document.getElementById('symbol').value = data.symbol || '';
+                document.getElementById('quantity').value = data.quantity || '';
+                document.getElementById('avgBuyPrice').value = data.avgBuyPrice || '';
+                document.getElementById('currentPrice').value = data.currentPrice || '';
+                document.getElementById('date').value = data.date || '';
+                document.getElementById('notes').value = data.notes || '';
+                document.getElementById('form-title').textContent = data.id ? "Edit Investment" : "Add New Investment";
+                document.getElementById('submit-button').textContent = data.id ? "Update Investment" : "Add Investment";
+                const cancelButton = document.getElementById('cancel-edit-button');
+                if (data.id) {
+                    cancelButton.style.display = 'block';
+                } else {
+                    cancelButton.style.display = 'none';
+                }
+            };
+
+            const resetForm = () => {
+                setFormValues({});
+                editingId = null;
+            };
+
+            const calculatePnL = (investment) => {
+                const marketValue = parseFloat(investment.currentPrice || 0) * parseFloat(investment.quantity || 0);
+                const buyValue = parseFloat(investment.avgBuyPrice || 0) * parseFloat(investment.quantity || 0);
+                return marketValue - buyValue;
+            };
+
+            const calculatePnLPercentage = (investment) => {
+                const pnl = calculatePnL(investment);
+                const buyValue = parseFloat(investment.avgBuyPrice || 0) * parseFloat(investment.quantity || 0);
+                return buyValue > 0 ? pnl / buyValue : 0;
+            };
+
+            document.getElementById('tab-content-container').innerHTML = `
+                <div class="p-6 long-term-bg min-h-screen rounded-xl">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-8 text-center">Long-Term Investments</h2>
+
+                    <div class="card">
+                        <h3 id="form-title">Add New Investment</h3>
+                        <div id="error-message" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-4" style="display:none;">
+                            <strong class="font-bold">Error!</strong>
+                            <span class="block sm:inline ml-2" id="error-text"></span>
+                        </div>
+                        <form id="investment-form">
+                            <div class="grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="mb-4">
+                                    <label for="type" class="block text-gray-700 text-sm font-bold mb-2">Investment Type</label>
+                                    <select id="type">
+                                        <option value="Index ETF">Index ETF</option>
+                                        <option value="Bluechip Stocks">Bluechip Stocks</option>
+                                        <option value="Midcap Leaders">Midcap Leaders</option>
+                                        <option value="Thematic ETFs">Thematic ETFs</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4"><label for="symbol" class="block text-gray-700 text-sm font-bold mb-2">Symbol</label><input type="text" id="symbol" placeholder="e.g., NIFTYBEES"></div>
+                                <div class="mb-4"><label for="quantity" class="block text-gray-700 text-sm font-bold mb-2">Quantity</label><input type="number" id="quantity" placeholder="e.g., 100" min="0" step="1"></div>
+                                <div class="mb-4"><label for="avgBuyPrice" class="block text-gray-700 text-sm font-bold mb-2">Average Buy Price (₹)</label><input type="number" id="avgBuyPrice" placeholder="e.g., 200.50" min="0" step="0.01"></div>
+                                <div class="mb-4"><label for="currentPrice" class="block text-gray-700 text-sm font-bold mb-2">Current Price (₹)</label><input type="number" id="currentPrice" placeholder="e.g., 210.75" min="0" step="0.01"></div>
+                                <div class="mb-4"><label for="date" class="block text-gray-700 text-sm font-bold mb-2">Date</label><input type="date" id="date"></div>
+                                <div class="mb-4 md:col-span-2"><label for="notes" class="block text-gray-700 text-sm font-bold mb-2">Notes</label><textarea id="notes" rows="3" placeholder="Any relevant notes or analysis..."></textarea></div>
+                            </div>
+                            <button type="submit" id="submit-button" class="mt-6 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">Add Investment</button>
+                            <button type="button" id="cancel-edit-button" class="mt-2 w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg" style="display:none;">Cancel Edit</button>
+                        </form>
+                    </div>
+
+                    <div class="card mt-8">
+                        <h3>Your Long-Term Portfolio</h3>
+                        <div class="flex justify-end mb-4 space-x-2">
+                            <button id="download-csv-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg text-sm">Download CSV</button>
+                            <button id="copy-clipboard-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg text-sm">Copy to Clipboard</button>
+                        </div>
+                        <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Symbol</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Avg Buy Price (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Current Price (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Market Value (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P&L (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P&L (%)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notes</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="investments-table-body" class="bg-white divide-y divide-gray-200">
+                                    ${investments.length > 0 ? investments.map(inv => `
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${inv.type}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${inv.symbol}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${inv.quantity}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(inv.avgBuyPrice)}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(inv.currentPrice)}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(inv.currentPrice * inv.quantity)}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm ${calculatePnL(inv) >= 0 ? 'text-green-600' : 'text-red-600'}">${formatCurrency(calculatePnL(inv))}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm ${calculatePnL(inv) >= 0 ? 'text-green-600' : 'text-red-600'}">${formatPercentage(calculatePnLPercentage(inv))}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${inv.date}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 max-w-xs overflow-hidden text-ellipsis">${inv.notes}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <button data-id="${inv.id}" class="edit-btn text-indigo-600 hover:text-indigo-900 mr-4">Edit</button>
+                                                <button data-id="${inv.id}" class="delete-btn text-red-600 hover:text-red-900">Delete</button>
+                                            </td>
+                                        </tr>
+                                    `).join('') : `<tr><td colspan="11" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">No data available.</td></tr>`}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('investment-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formValues = getFormValues();
+                const errorDiv = document.getElementById('error-message');
+                const errorText = document.getElementById('error-text');
+
+                if (!formValues.symbol || !formValues.quantity || !formValues.avgBuyPrice || !formValues.currentPrice || !formValues.date) {
+                    errorText.textContent = "Please fill all required fields: Symbol, Quantity, Average Buy Price, Current Price, Date.";
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+                errorDiv.style.display = 'none'; // Hide error if validation passes
+
+                const dataToSave = {
+                    ...formValues,
+                    quantity: parseFloat(formValues.quantity),
+                    avgBuyPrice: parseFloat(formValues.avgBuyPrice),
+                    currentPrice: parseFloat(formValues.currentPrice),
+                };
+
+                if (editingId) {
+                    allData.longTermInvestments = allData.longTermInvestments.map(inv =>
+                        inv.id === editingId ? { ...dataToSave, id: editingId } : inv
+                    );
+                    alert("Investment updated successfully!");
+                } else {
+                    allData.longTermInvestments.push({ ...dataToSave, id: Date.now().toString() });
+                    alert("Investment added successfully!");
+                }
+                saveData();
+                renderLongTermInvestments(); // Re-render the list
+            });
+
+            document.getElementById('cancel-edit-button').addEventListener('click', resetForm);
+
+            // Attach event listeners for edit and delete buttons after rendering
+            document.querySelectorAll('#investments-table-body .edit-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const id = e.target.dataset.id;
+                    const investmentToEdit = allData.longTermInvestments.find(inv => inv.id === id);
+                    if (investmentToEdit) {
+                        setFormValues(investmentToEdit);
+                        editingId = id;
+                    }
+                });
+            });
+
+            document.querySelectorAll('#investments-table-body .delete-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const id = e.target.dataset.id;
+                    if (confirm("Are you sure you want to delete this investment?")) {
+                        allData.longTermInvestments = allData.longTermInvestments.filter(inv => inv.id !== id);
+                        saveData();
+                        alert("Investment deleted successfully!");
+                        renderLongTermInvestments();
+                    }
+                });
+            });
+
+            document.getElementById('download-csv-btn').addEventListener('click', () => {
+                const headers = ['Type', 'Symbol', 'Quantity', 'Avg Buy Price (₹)', 'Current Price (₹)', 'Market Value (₹)', 'P&L (₹)', 'P&L (%)', 'Date', 'Notes'];
+                prepareAndDownloadOrCopyData('long_term_investments.csv', headers, investments, 'download');
+            });
+
+            document.getElementById('copy-clipboard-btn').addEventListener('click', () => {
+                const headers = ['Type', 'Symbol', 'Quantity', 'Avg Buy Price (₹)', 'Current Price (₹)', 'Market Value (₹)', 'P&L (₹)', 'P&L (%)', 'Date', 'Notes'];
+                prepareAndDownloadOrCopyData('long_term_investments_clipboard', headers, investments, 'copy');
+            });
+            setFormValues({}); // Initialize form on first render
+        }
+
+        function renderSwingTrading() {
+            const trades = allData.swingTrades;
+            let editingId = null;
+
+            const getFormValues = () => {
+                return {
+                    symbol: document.getElementById('symbol').value,
+                    date: document.getElementById('date').value,
+                    entryPrice: document.getElementById('entryPrice').value,
+                    exitDate: document.getElementById('exitDate').value,
+                    exitPrice: document.getElementById('exitPrice').value,
+                    size: document.getElementById('size').value,
+                    stopLossLevel: document.getElementById('stopLossLevel').value,
+                    targetPrice: document.getElementById('targetPrice').value,
+                    rrPlanned: document.getElementById('rrPlanned').value,
+                    emaAlignment: document.getElementById('emaAlignment').value,
+                    volumeSpike: document.getElementById('volumeSpike').value,
+                    breakoutPrice: document.getElementById('breakoutPrice').value,
+                    score: document.getElementById('score').value,
+                    notes: document.getElementById('notes').value,
+                };
+            };
+
+            const setFormValues = (data) => {
+                document.getElementById('symbol').value = data.symbol || '';
+                document.getElementById('date').value = data.date || '';
+                document.getElementById('entryPrice').value = data.entryPrice || '';
+                document.getElementById('exitDate').value = data.exitDate || '';
+                document.getElementById('exitPrice').value = data.exitPrice || '';
+                document.getElementById('size').value = data.size || '';
+                document.getElementById('pnl').value = isNaN(data.pnl) ? '' : data.pnl.toFixed(2);
+                document.getElementById('stopLossLevel').value = data.stopLossLevel || '';
+                document.getElementById('targetPrice').value = data.targetPrice || '';
+                document.getElementById('rrPlanned').value = data.rrPlanned || '';
+                document.getElementById('rrAchieved').value = isNaN(data.rrAchieved) ? '' : data.rrAchieved.toFixed(2);
+                document.getElementById('emaAlignment').value = data.emaAlignment || '';
+                document.getElementById('volumeSpike').value = data.volumeSpike || '';
+                document.getElementById('breakoutPrice').value = data.breakoutPrice || '';
+                document.getElementById('score').value = data.score || '';
+                document.getElementById('notes').value = data.notes || '';
+
+                document.getElementById('form-title').textContent = data.id ? "Edit Swing Trade" : "Add New Swing Trade";
+                document.getElementById('submit-button').textContent = data.id ? "Update Trade" : "Add Trade";
+                const cancelButton = document.getElementById('cancel-edit-button');
+                if (data.id) {
+                    cancelButton.style.display = 'block';
+                } else {
+                    cancelButton.style.display = 'none';
+                }
+            };
+
+            const resetForm = () => {
+                setFormValues({ pnl: NaN, rrAchieved: NaN });
+                editingId = null;
+            };
+
+            const calculatePnLAndRR = () => {
+                const entry = parseFloat(document.getElementById('entryPrice').value);
+                const exit = parseFloat(document.getElementById('exitPrice').value);
+                const size = parseFloat(document.getElementById('size').value);
+                const stopLoss = parseFloat(document.getElementById('stopLossLevel').value);
+
+                let calculatedPnl = NaN;
+                if (!isNaN(entry) && !isNaN(exit) && !isNaN(size) && size > 0) {
+                    calculatedPnl = (exit - entry) * size;
+                }
+                document.getElementById('pnl').value = isNaN(calculatedPnl) ? '' : calculatedPnl.toFixed(2);
+
+                let achievedRR = NaN;
+                if (!isNaN(entry) && !isNaN(exit) && !isNaN(stopLoss) && entry !== stopLoss) {
+                    achievedRR = (exit - entry) / Math.abs(entry - stopLoss);
+                }
+                document.getElementById('rrAchieved').value = isNaN(achievedRR) ? '' : achievedRR.toFixed(2);
+            };
+
+            const calculatePnLPercentage = (trade) => {
+                const pnl = trade.pnl;
+                const entryValue = trade.entryPrice * trade.size;
+                return entryValue > 0 ? pnl / entryValue : 0;
+            };
+
+            const calculateRisk = (trade) => {
+                const entry = parseFloat(trade.entryPrice);
+                const stopLoss = parseFloat(trade.stopLossLevel);
+                const size = parseFloat(trade.size);
+
+                if (!isNaN(entry) && !isNaN(stopLoss) && !isNaN(size) && size > 0) {
+                    return Math.abs(entry - stopLoss) * size;
+                }
+                return 0;
+            };
+
+            document.getElementById('tab-content-container').innerHTML = `
+                <div class="p-6 swing-bg min-h-screen rounded-xl">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-8 text-center">Swing Trading Log</h2>
+
+                    <div class="card">
+                        <h3 id="form-title">Add New Swing Trade</h3>
+                        <div id="error-message" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-4" style="display:none;">
+                            <strong class="font-bold">Error!</strong>
+                            <span class="block sm:inline ml-2" id="error-text"></span>
+                        </div>
+                        <form id="swing-trade-form">
+                            <div class="grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="mb-4"><label for="symbol" class="block text-gray-700 text-sm font-bold mb-2">Symbol</label><input type="text" id="symbol" placeholder="e.g., RELIANCE"></div>
+                                <div class="mb-4"><label for="date" class="block text-gray-700 text-sm font-bold mb-2">Entry Date</label><input type="date" id="date"></div>
+                                <div class="mb-4"><label for="entryPrice" class="block text-gray-700 text-sm font-bold mb-2">Entry Price (₹)</label><input type="number" id="entryPrice" placeholder="e.g., 2450.00" min="0" step="0.01"></div>
+                                <div class="mb-4"><label for="exitDate" class="block text-gray-700 text-sm font-bold mb-2">Exit Date</label><input type="date" id="exitDate"></div>
+                                <div class="mb-4"><label for="exitPrice" class="block text-gray-700 text-sm font-bold mb-2">Exit Price (₹)</label><input type="number" id="exitPrice" placeholder="e.g., 2500.00" min="0" step="0.01"></div>
+                                <div class="mb-4"><label for="size" class="block text-gray-700 text-sm font-bold mb-2">Size (Quantity)</label><input type="number" id="size" placeholder="e.g., 10" min="0" step="1"></div>
+                                <div class="mb-4"><label for="pnl" class="block text-gray-700 text-sm font-bold mb-2">P&L (₹)</label><input type="number" id="pnl" readonly placeholder="Calculated automatically"></div>
+                                <div class="mb-4"><label for="stopLossLevel" class="block text-gray-700 text-sm font-bold mb-2">Stop Loss Level (₹)</label><input type="number" id="stopLossLevel" placeholder="e.g., 2400.00" min="0" step="0.01"></div>
+                                <div class="mb-4"><label for="targetPrice" class="block text-gray-700 text-sm font-bold mb-2">Target Price (₹)</label><input type="number" id="targetPrice" placeholder="e.g., 2550.00" min="0" step="0.01"></div>
+                                <div class="mb-4"><label for="rrPlanned" class="block text-gray-700 text-sm font-bold mb-2">RR Planned</label><input type="number" id="rrPlanned" placeholder="e.g., 1.5" min="0" step="0.01"></div>
+                                <div class="mb-4"><label for="rrAchieved" class="block text-gray-700 text-sm font-bold mb-2">RR Achieved</label><input type="number" id="rrAchieved" readonly placeholder="Calculated automatically"></div>
+                                <div class="mb-4">
+                                    <label for="emaAlignment" class="block text-gray-700 text-sm font-bold mb-2">EMA Alignment</label>
+                                    <select id="emaAlignment">
+                                        <option value="">Select...</option>
+                                        <option value="Bullish">Bullish</option>
+                                        <option value="Bearish">Bearish</option>
+                                        <option value="Neutral">Neutral</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="volumeSpike" class="block text-gray-700 text-sm font-bold mb-2">Volume Spike</label>
+                                    <select id="volumeSpike">
+                                        <option value="">Select...</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4"><label for="breakoutPrice" class="block text-gray-700 text-sm font-bold mb-2">Breakout Price (₹)</label><input type="number" id="breakoutPrice" placeholder="e.g., 2455.00" min="0" step="0.01"></div>
+                                <div class="mb-4"><label for="score" class="block text-gray-700 text-sm font-bold mb-2">Score (0-10)</label><input type="number" id="score" placeholder="e.g., 8" min="0" max="10" step="1"></div>
+                                <div class="mb-4 md:col-span-2"><label for="notes" class="block text-gray-700 text-sm font-bold mb-2">Notes/Lessons</label><textarea id="notes" rows="3" placeholder="Key observations, what went right/wrong..."></textarea></div>
+                            </div>
+                            <button type="submit" id="submit-button" class="mt-6 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">Add Trade</button>
+                            <button type="button" id="cancel-edit-button" class="mt-2 w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg" style="display:none;">Cancel Edit</button>
+                        </form>
+                    </div>
+
+                    <div class="card mt-8">
+                        <h3>Your Swing Trades</h3>
+                        <div class="flex justify-end mb-4 space-x-2">
+                            <button id="download-csv-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg text-sm">Download CSV</button>
+                            <button id="copy-clipboard-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg text-sm">Copy to Clipboard</button>
+                        </div>
+                        <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Symbol</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entry Price (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Exit Price (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P&L (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P&L (%)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Exit Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Holding Period (Days)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Risk (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RR Planned</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RR Achieved</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EMA Alignment</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume Spike</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Breakout Price (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Target Price (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stop Loss Level (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notes/Lessons</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="swing-trades-table-body" class="bg-white divide-y divide-gray-200">
+                                    ${trades.length > 0 ? trades.map(trade => `
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${trade.symbol}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(trade.entryPrice)}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(trade.exitPrice)}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${trade.size}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm ${trade.pnl >= 0 ? 'text-green-600' : 'text-red-600'}">${formatCurrency(trade.pnl)}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm ${calculatePnLPercentage(trade) >= 0 ? 'text-green-600' : 'text-red-600'}">${formatPercentage(calculatePnLPercentage(trade))}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${trade.date}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${trade.exitDate}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${trade.date && trade.exitDate ? Math.floor((new Date(trade.exitDate) - new Date(trade.date)) / (1000 * 60 * 60 * 24)) : 'N/A'}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(calculateRisk(trade))}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${trade.rrPlanned}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${isNaN(trade.rrAchieved) ? 'N/A' : trade.rrAchieved.toFixed(2)}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${trade.emaAlignment}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${trade.volumeSpike}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(trade.breakoutPrice)}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(trade.targetPrice)}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(trade.stopLossLevel)}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${trade.score}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 max-w-xs overflow-hidden text-ellipsis">${trade.notes}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <button data-id="${trade.id}" class="edit-btn text-indigo-600 hover:text-indigo-900 mr-4">Edit</button>
+                                                <button data-id="${trade.id}" class="delete-btn text-red-600 hover:text-red-900">Delete</button>
+                                            </td>
+                                        </tr>
+                                    `).join('') : `<tr><td colspan="20" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">No data available.</td></tr>`}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const form = document.getElementById('swing-trade-form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formValues = getFormValues();
+                const errorDiv = document.getElementById('error-message');
+                const errorText = document.getElementById('error-text');
+
+                if (!formValues.symbol || !formValues.date || !formValues.entryPrice || !formValues.size || !formValues.stopLossLevel || !formValues.targetPrice) {
+                    errorText.textContent = "Please fill all required fields: Symbol, Date, Entry Price, Size, Stop Loss Level, Target Price.";
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+                errorDiv.style.display = 'none';
+
+                const dataToSave = {
+                    ...formValues,
+                    entryPrice: parseFloat(formValues.entryPrice),
+                    exitPrice: parseFloat(formValues.exitPrice || 0),
+                    size: parseFloat(formValues.size),
+                    pnl: parseFloat(document.getElementById('pnl').value), // Get calculated PnL
+                    rrPlanned: parseFloat(formValues.rrPlanned || 0),
+                    rrAchieved: parseFloat(document.getElementById('rrAchieved').value), // Get calculated RR
+                    score: parseFloat(formValues.score || 0),
+                    type: 'Swing'
+                };
+
+                if (editingId) {
+                    allData.swingTrades = allData.swingTrades.map(trade =>
+                        trade.id === editingId ? { ...dataToSave, id: editingId } : trade
+                    );
+                    alert("Swing trade updated successfully!");
+                } else {
+                    allData.swingTrades.push({ ...dataToSave, id: Date.now().toString() });
+                    alert("Swing trade added successfully!");
+                }
+                saveData();
+                renderSwingTrading();
+            });
+
+            // Event listeners for real-time calculation
+            ['entryPrice', 'exitPrice', 'size', 'stopLossLevel'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', calculatePnLAndRR);
+                }
+            });
+
+            document.getElementById('cancel-edit-button').addEventListener('click', resetForm);
+
+            // Attach event listeners for edit and delete buttons after rendering
+            document.querySelectorAll('#swing-trades-table-body .edit-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const id = e.target.dataset.id;
+                    const tradeToEdit = allData.swingTrades.find(trade => trade.id === id);
+                    if (tradeToEdit) {
+                        setFormValues(tradeToEdit);
+                        editingId = id;
+                    }
+                });
+            });
+
+            document.querySelectorAll('#swing-trades-table-body .delete-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const id = e.target.dataset.id;
+                    if (confirm("Are you sure you want to delete this swing trade?")) {
+                        allData.swingTrades = allData.swingTrades.filter(trade => trade.id !== id);
+                        saveData();
+                        alert("Swing trade deleted successfully!");
+                        renderSwingTrading();
+                    }
+                });
+            });
+
+            document.getElementById('download-csv-btn').addEventListener('click', () => {
+                const headers = ['Symbol', 'Entry Price (₹)', 'Exit Price (₹)', 'Size', 'P&L (₹)', 'P&L (%)', 'Date', 'Exit Date', 'Holding Period (Days)', 'Risk (₹)', 'RR Planned', 'RR Achieved', 'EMA Alignment', 'Volume Spike', 'Breakout Price (₹)', 'Target Price (₹)', 'Stop Loss Level (₹)', 'Score', 'Notes/Lessons'];
+                prepareAndDownloadOrCopyData('swing_trades.csv', headers, trades, 'download');
+            });
+
+            document.getElementById('copy-clipboard-btn').addEventListener('click', () => {
+                const headers = ['Symbol', 'Entry Price (₹)', 'Exit Price (₹)', 'Size', 'P&L (₹)', 'P&L (%)', 'Date', 'Exit Date', 'Holding Period (Days)', 'Risk (₹)', 'RR Planned', 'RR Achieved', 'EMA Alignment', 'Volume Spike', 'Breakout Price (₹)', 'Target Price (₹)', 'Stop Loss Level (₹)', 'Score', 'Notes/Lessons'];
+                prepareAndDownloadOrCopyData('swing_trades_clipboard', headers, trades, 'copy');
+            });
+            resetForm(); // Initialize form on first render
+        }
+
+        function renderDayTrading() {
+            const trades = allData.dayTrades;
+            let editingId = null;
+
+            const getFormValues = () => {
+                return {
+                    symbol: document.getElementById('symbol').value,
+                    date: document.getElementById('date').value,
+                    entryPrice: document.getElementById('entryPrice').value,
+                    exitPrice: document.getElementById('exitPrice').value,
+                    size: document.getElementById('size').value,
+                    risk: document.getElementById('risk').value,
+                    rrAchieved: document.getElementById('rrAchieved').value,
+                    actionTriggered: document.getElementById('actionTriggered').value,
+                    emaAlignment: document.getElementById('emaAlignment').value,
+                    volumeSpike: document.getElementById('volumeSpike').value,
+                    notes: document.getElementById('notes').value,
+                };
+            };
+
+            const setFormValues = (data) => {
+                document.getElementById('symbol').value = data.symbol || '';
+                document.getElementById('date').value = data.date || '';
+                document.getElementById('entryPrice').value = data.entryPrice || '';
+                document.getElementById('exitPrice').value = data.exitPrice || '';
+                document.getElementById('size').value = data.size || '';
+                document.getElementById('pnl').value = isNaN(data.pnl) ? '' : data.pnl.toFixed(2);
+                document.getElementById('risk').value = data.risk || '';
+                document.getElementById('rrAchieved').value = data.rrAchieved || '';
+                document.getElementById('actionTriggered').value = data.actionTriggered || '';
+                document.getElementById('emaAlignment').value = data.emaAlignment || '';
+                document.getElementById('volumeSpike').value = data.volumeSpike || '';
+                document.getElementById('notes').value = data.notes || '';
+
+                document.getElementById('form-title').textContent = data.id ? "Edit Day Trade" : "Add New Day Trade";
+                document.getElementById('submit-button').textContent = data.id ? "Update Trade" : "Add Trade";
+                const cancelButton = document.getElementById('cancel-edit-button');
+                if (data.id) {
+                    cancelButton.style.display = 'block';
+                } else {
+                    cancelButton.style.display = 'none';
+                }
+            };
+
+            const resetForm = () => {
+                setFormValues({ pnl: NaN });
+                editingId = null;
+            };
+
+            const calculatePnL = () => {
+                const entry = parseFloat(document.getElementById('entryPrice').value);
+                const exit = parseFloat(document.getElementById('exitPrice').value);
+                const size = parseFloat(document.getElementById('size').value);
+
+                let calculatedPnl = NaN;
+                if (!isNaN(entry) && !isNaN(exit) && !isNaN(size) && size > 0) {
+                    calculatedPnl = (exit - entry) * size;
+                }
+                document.getElementById('pnl').value = isNaN(calculatedPnl) ? '' : calculatedPnl.toFixed(2);
+            };
+
+            const calculatePnLPercentage = (trade) => {
+                const pnl = trade.pnl;
+                const entryValue = trade.entryPrice * trade.size;
+                return entryValue > 0 ? pnl / entryValue : 0;
+            };
+
+            document.getElementById('tab-content-container').innerHTML = `
+                <div class="p-6 day-trading-bg min-h-screen rounded-xl">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-8 text-center">Day Trading Log</h2>
+
+                    <div class="card">
+                        <h3 id="form-title">Add New Day Trade</h3>
+                        <div id="error-message" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-4" style="display:none;">
+                            <strong class="font-bold">Error!</strong>
+                            <span class="block sm:inline ml-2" id="error-text"></span>
+                        </div>
+                        <form id="day-trade-form">
+                            <div class="grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="mb-4"><label for="symbol" class="block text-gray-700 text-sm font-bold mb-2">Symbol</label><input type="text" id="symbol" placeholder="e.g., BANKNIFTY"></div>
+                                <div class="mb-4"><label for="date" class="block text-gray-700 text-sm font-bold mb-2">Date</label><input type="date" id="date"></div>
+                                <div class="mb-4"><label for="entryPrice" class="block text-gray-700 text-sm font-bold mb-2">Entry Price (₹)</label><input type="number" id="entryPrice" placeholder="e.g., 45000.00" min="0" step="0.01"></div>
+                                <div class="mb-4"><label for="exitPrice" class="block text-gray-700 text-sm font-bold mb-2">Exit Price (₹)</label><input type="number" id="exitPrice" placeholder="e.g., 45050.00" min="0" step="0.01"></div>
+                                <div class="mb-4"><label for="size" class="block text-gray-700 text-sm font-bold mb-2">Size (Quantity)</label><input type="number" id="size" placeholder="e.g., 15" min="0" step="1"></div>
+                                <div class="mb-4"><label for="pnl" class="block text-gray-700 text-sm font-bold mb-2">P&L (₹)</label><input type="number" id="pnl" readonly placeholder="Calculated automatically"></div>
+                                <div class="mb-4"><label for="risk" class="block text-gray-700 text-sm font-bold mb-2">Risk (₹)</label><input type="number" id="risk" placeholder="e.g., 500" min="0" step="0.01"></div>
+                                <div class="mb-4"><label for="rrAchieved" class="block text-gray-700 text-sm font-bold mb-2">RR Achieved</label><input type="number" id="rrAchieved" placeholder="e.g., 1.2" min="0" step="0.01"></div>
+                                <div class="mb-4">
+                                    <label for="actionTriggered" class="block text-gray-700 text-sm font-bold mb-2">Action Triggered</label>
+                                    <select id="actionTriggered">
+                                        <option value="">Select...</option>
+                                        <option value="Entry Criteria Met">Entry Criteria Met</option>
+                                        <option value="Stop Loss Hit">Stop Loss Hit</option>
+                                        <option value="Target Hit">Target Hit</option>
+                                        <option value="Time-Based Exit">Time-Based Exit</option>
+                                        <option value="Manual Exit">Manual Exit</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="emaAlignment" class="block text-gray-700 text-sm font-bold mb-2">EMA Alignment</label>
+                                    <select id="emaAlignment">
+                                        <option value="">Select...</option>
+                                        <option value="Bullish">Bullish</option>
+                                        <option value="Bearish">Bearish</option>
+                                        <option value="Neutral">Neutral</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="volumeSpike" class="block text-gray-700 text-sm font-bold mb-2">Volume Spike</label>
+                                    <select id="volumeSpike">
+                                        <option value="">Select...</option>
+                                        <option value="Yes">Yes</option>
+                                        <option value="No">No</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4 md:col-span-2"><label for="notes" class="block text-gray-700 text-sm font-bold mb-2">Notes/Lessons</label><textarea id="notes" rows="3" placeholder="Key observations, what went right/wrong..."></textarea></div>
+                            </div>
+                            <button type="submit" id="submit-button" class="mt-6 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">Add Trade</button>
+                            <button type="button" id="cancel-edit-button" class="mt-2 w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg" style="display:none;">Cancel Edit</button>
+                        </form>
+                    </div>
+
+                    <div class="card mt-8">
+                        <h3>Your Day Trades</h3>
+                        <div class="flex justify-end mb-4 space-x-2">
+                            <button id="download-csv-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg text-sm">Download CSV</button>
+                            <button id="copy-clipboard-btn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg text-sm">Copy to Clipboard</button>
+                        </div>
+                        <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Symbol</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entry Price (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Exit Price (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P&L (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">P&L (%)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Risk (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">RR Achieved</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action Triggered</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">EMA Alignment</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume Spike</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notes/Lessons</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="day-trades-table-body" class="bg-white divide-y divide-gray-200">
+                                    ${trades.length > 0 ? trades.map(trade => `
+                                        <tr>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${trade.symbol}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(trade.entryPrice)}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(trade.exitPrice)}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${trade.size}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm ${trade.pnl >= 0 ? 'text-green-600' : 'text-red-600'}">${formatCurrency(trade.pnl)}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm ${calculatePnLPercentage(trade) >= 0 ? 'text-green-600' : 'text-red-600'}">${formatPercentage(calculatePnLPercentage(trade))}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${trade.date}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(trade.risk)}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${trade.rrAchieved}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${trade.actionTriggered}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${trade.emaAlignment}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${trade.volumeSpike}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 max-w-xs overflow-hidden text-ellipsis">${trade.notes}</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                                <button data-id="${trade.id}" class="edit-btn text-indigo-600 hover:text-indigo-900 mr-4">Edit</button>
+                                                <button data-id="${trade.id}" class="delete-btn text-red-600 hover:text-red-900">Delete</button>
+                                            </td>
+                                        </tr>
+                                    `).join('') : `<tr><td colspan="14" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">No data available.</td></tr>`}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const form = document.getElementById('day-trade-form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formValues = getFormValues();
+                const errorDiv = document.getElementById('error-message');
+                const errorText = document.getElementById('error-text');
+
+                if (!formValues.symbol || !formValues.date || !formValues.entryPrice || !formValues.exitPrice || !formValues.size) {
+                    errorText.textContent = "Please fill all required fields: Symbol, Date, Entry Price, Exit Price, Size.";
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+                errorDiv.style.display = 'none';
+
+                const dataToSave = {
+                    ...formValues,
+                    entryPrice: parseFloat(formValues.entryPrice),
+                    exitPrice: parseFloat(formValues.exitPrice),
+                    size: parseFloat(formValues.size),
+                    pnl: parseFloat(document.getElementById('pnl').value),
+                    risk: parseFloat(formValues.risk || 0),
+                    rrAchieved: parseFloat(formValues.rrAchieved || 0),
+                    type: 'Day'
+                };
+
+                if (editingId) {
+                    allData.dayTrades = allData.dayTrades.map(trade =>
+                        trade.id === editingId ? { ...dataToSave, id: editingId } : trade
+                    );
+                    alert("Day trade updated successfully!");
+                } else {
+                    allData.dayTrades.push({ ...dataToSave, id: Date.now().toString() });
+                    alert("Day trade added successfully!");
+                }
+                saveData();
+                renderDayTrading();
+            });
+
+            // Event listeners for real-time calculation
+            ['entryPrice', 'exitPrice', 'size'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', calculatePnL);
+                }
+            });
+
+            document.getElementById('cancel-edit-button').addEventListener('click', resetForm);
+
+            // Attach event listeners for edit and delete buttons after rendering
+            document.querySelectorAll('#day-trades-table-body .edit-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const id = e.target.dataset.id;
+                    const tradeToEdit = allData.dayTrades.find(trade => trade.id === id);
+                    if (tradeToEdit) {
+                        setFormValues(tradeToEdit);
+                        editingId = id;
+                    }
+                });
+            });
+
+            document.querySelectorAll('#day-trades-table-body .delete-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const id = e.target.dataset.id;
+                    if (confirm("Are you sure you want to delete this day trade?")) {
+                        allData.dayTrades = allData.dayTrades.filter(trade => trade.id !== id);
+                        saveData();
+                        alert("Day trade deleted successfully!");
+                        renderDayTrading();
+                    }
+                });
+            });
+
+            document.getElementById('download-csv-btn').addEventListener('click', () => {
+                const headers = ['Symbol', 'Entry Price (₹)', 'Exit Price (₹)', 'Size', 'P&L (₹)', 'P&L (%)', 'Date', 'Risk (₹)', 'RR Achieved', 'Action Triggered', 'EMA Alignment', 'Volume Spike', 'Notes/Lessons'];
+                prepareAndDownloadOrCopyData('day_trades.csv', headers, trades, 'download');
+            });
+
+            document.getElementById('copy-clipboard-btn').addEventListener('click', () => {
+                const headers = ['Symbol', 'Entry Price (₹)', 'Exit Price (₹)', 'Size', 'P&L (₹)', 'P&L (%)', 'Date', 'Risk (₹)', 'RR Achieved', 'Action Triggered', 'EMA Alignment', 'Volume Spike', 'Notes/Lessons'];
+                prepareAndDownloadOrCopyData('day_trades_clipboard', headers, trades, 'copy');
+            });
+            resetForm(); // Initialize form on first render
+        }
+
+        function renderBusinessFund() {
+            const { swingTrades, dayTrades } = allData;
+
+            const totalSwingPnl = swingTrades.reduce((sum, trade) => sum + (isNaN(trade.pnl) ? 0 : parseFloat(trade.pnl)), 0);
+            const totalDayTradingPnl = dayTrades.reduce((sum, trade) => sum + (isNaN(trade.pnl) ? 0 : parseFloat(trade.pnl)), 0);
+            const netTradingProfit = totalSwingPnl + totalDayTradingPnl;
+
+            const reinvestedAmount = netTradingProfit * 0.5;
+            const contributionAmount = netTradingProfit * 0.5;
+            const currentTotalFund = contributionAmount;
+
+            const targetMin = 300000;
+            const targetMax = 500000;
+
+            const fundEntry = {
+                id: 'derived-fund',
+                date: new Date().toISOString().slice(0, 10),
+                netTradingProfit: netTradingProfit,
+                reinvested: reinvestedAmount,
+                contribution: contributionAmount,
+                totalBusinessFund: currentTotalFund,
+                notes: 'Automatically calculated from total Swing & Day Trading P&L (50% contribution).'
+            };
+
+            document.getElementById('tab-content-container').innerHTML = `
+                <div class="p-6 business-fund-bg min-h-screen rounded-xl">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-8 text-center">Business Fund Management</h2>
+
+                    <div class="card">
+                        <h3>Current Business Fund Status</h3>
+                        <div class="overflow-x-auto rounded-lg shadow-sm border border-gray-200">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Net Trading Profit (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reinvested (50%) (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Business Fund Contribution (50%) (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Business Fund (Cumulative) (₹)</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${fundEntry.date}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm ${fundEntry.netTradingProfit >= 0 ? 'text-green-600' : 'text-red-600'}">${formatCurrency(fundEntry.netTradingProfit)}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(fundEntry.reinvested)}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(fundEntry.contribution)}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-purple-700 font-bold">${formatCurrency(fundEntry.totalBusinessFund)}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 max-w-xs overflow-hidden text-ellipsis">${fundEntry.notes}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="mt-6 text-right text-lg font-semibold text-gray-800">
+                        Current Total Business Fund: <span class="text-indigo-700">${formatCurrency(currentTotalFund)}</span>
+                    </div>
+                    <div class="mt-2 text-right text-lg font-semibold text-gray-800">
+                        Target by July 1, 2026: <span class="text-purple-700">${formatCurrency(targetMin)} - ${formatCurrency(targetMax)}</span>
+                    </div>
+                    <div class="mt-2 text-right">
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" style="width: ${Math.min(100, (currentTotalFund / targetMax) * 100)}%;"></div>
+                        </div>
+                        <p class="text-sm text-gray-600 mt-1">${formatPercentage(currentTotalFund / targetMax)} of target reached</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderAnalytics() {
+            const { longTermInvestments, swingTrades, dayTrades } = allData;
+
+            let totalTrades = 0;
+            let totalPnl = 0;
+            let wins = 0;
+            let totalRr = 0;
+            let swingPnl = 0;
+            let dayPnl = 0;
+            let longTermPnl = 0;
+
+            swingTrades.forEach(trade => {
+                totalTrades++;
+                totalPnl += (isNaN(trade.pnl) ? 0 : parseFloat(trade.pnl));
+                swingPnl += (isNaN(trade.pnl) ? 0 : parseFloat(trade.pnl));
+                if ((isNaN(trade.pnl) ? 0 : parseFloat(trade.pnl)) > 0) wins++;
+                totalRr += (isNaN(trade.rrAchieved) ? 0 : parseFloat(trade.rrAchieved));
+            });
+
+            dayTrades.forEach(trade => {
+                totalTrades++;
+                totalPnl += (isNaN(trade.pnl) ? 0 : parseFloat(trade.pnl));
+                dayPnl += (isNaN(trade.pnl) ? 0 : parseFloat(trade.pnl));
+                if ((isNaN(trade.pnl) ? 0 : parseFloat(trade.pnl)) > 0) wins++;
+                totalRr += (isNaN(trade.rrAchieved) ? 0 : parseFloat(trade.rrAchieved));
+            });
+
+            longTermInvestments.forEach(inv => {
+                const marketValue = (inv.currentPrice || 0) * (inv.quantity || 0);
+                const buyValue = (inv.avgBuyPrice || 0) * (inv.quantity || 0);
+                const pnl = marketValue - buyValue;
+                totalPnl += pnl;
+                longTermPnl += pnl;
+            });
+
+            const currentTotalCapital = INITIAL_OVERALL_CAPITAL + totalPnl;
+            
+            // Update peak capital dynamically
+            allData.analyticsSettings.peakCapital = Math.max(allData.analyticsSettings.peakCapital, currentTotalCapital);
+            saveData(); // Save updated peak capital
+
+            const currentPeakCapital = allData.analyticsSettings.peakCapital;
+            const currentDrawdown = (currentPeakCapital > 0) ? (currentPeakCapital - currentTotalCapital) / currentPeakCapital : 0;
+            const dailyMaxLossDayTrading = 3000; // Fixed as per blueprint
+
+            document.getElementById('tab-content-container').innerHTML = `
+                <div class="p-6 analytics-bg min-h-screen rounded-xl">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-8 text-center">Trading Analytics & Insights</h2>
+
+                    <div class="card">
+                        <h3>Overall Performance Summary</h3>
+                        <div class="grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <p class="text-gray-700 text-lg">Total Trades: <span class="font-semibold">${totalTrades}</span></p>
+                            <p class="text-lg ${totalPnl >= 0 ? 'text-green-600' : 'text-red-600'}">Total P&L (All Time): <span class="font-bold">${formatCurrency(totalPnl)}</span></p>
+                            <p class="text-gray-700 text-lg">Win Rate: <span class="font-semibold">${formatPercentage(totalTrades > 0 ? (wins / totalTrades) : 0)}</span></p>
+                            <p class="text-gray-700 text-lg">Average R:R: <span class="font-semibold">${totalTrades > 0 ? (totalRr / totalTrades).toFixed(2) : '0.00'}</span></p>
+                            <p class="text-gray-700 text-lg">Initial Capital: <span class="font-semibold">${formatCurrency(INITIAL_OVERALL_CAPITAL)}</span></p>
+                            <p class="text-gray-700 text-lg">Current Total Capital: <span class="font-semibold">${formatCurrency(currentTotalCapital)}</span></p>
+                            <p class="text-gray-700 text-lg">Peak Capital: <span class="font-semibold">${formatCurrency(currentPeakCapital)}</span></p>
+                            <p class="text-lg ${currentDrawdown <= 0 ? 'text-green-600' : 'text-red-600'}">Current Drawdown: <span class="font-semibold">${formatPercentage(currentDrawdown)}</span></p>
+                            <p class="text-lg ${swingPnl >= 0 ? 'text-green-600' : 'text-red-600'}">Swing P&L: <span class="font-semibold">${formatCurrency(swingPnl)}</span></p>
+                            <p class="text-lg ${dayPnl >= 0 ? 'text-green-600' : 'text-red-600'}">Day P&L: <span class="font-bold">${formatCurrency(dayPnl)}</span></p>
+                            <p class="text-lg ${longTermPnl >= 0 ? 'text-green-600' : 'text-red-600'}">Long-Term P&L: <span class="font-semibold">${formatCurrency(longTermPnl)}</span></p>
+                        </div>
+                    </div>
+                    <div class="card mt-8">
+                        <h3>Key Metrics & Rules</h3>
+                        <p class="text-gray-700 text-lg mb-2">Daily Max Loss (Day Trading): <span class="font-semibold">${formatCurrency(dailyMaxLossDayTrading)}</span></p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderStrategiesAndRules() {
+            const { strategiesAndRules } = allData;
+
+            document.getElementById('tab-content-container').innerHTML = `
+                <div class="p-6 strategies-bg min-h-screen rounded-xl">
+                    <h2 class="text-3xl font-extrabold text-gray-900 mb-8 text-center">Strategies, Rules & Notes</h2>
+
+                    <form id="strategies-form">
+                        <div class="grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Long-Term Strategies -->
+                            <div class="card">
+                                <h3>Long-Term Investing</h3>
+                                <div class="mb-4">
+                                    <label for="longTermStrategies" class="block text-gray-700 text-sm font-bold mb-2">Strategies</label>
+                                    <textarea id="longTermStrategies" rows="4" placeholder="e.g., Buy & hold, systematic investing (SIPs).">${strategiesAndRules.longTerm.strategies}</textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="longTermRules" class="block text-gray-700 text-sm font-bold mb-2">Rules</label>
+                                    <textarea id="longTermRules" rows="4" placeholder="e.g., Invest in quality assets, rebalance periodically, avoid emotional decisions.">${strategiesAndRules.longTerm.rules}</textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="longTermNotes" class="block text-gray-700 text-sm font-bold mb-2">Notes/Goals</label>
+                                    <textarea id="longTermNotes" rows="3" placeholder="e.g., Focus on long-term wealth creation (5+ years).">${strategiesAndRules.longTerm.notes}</textarea>
+                                </div>
+                            </div>
+
+                            <!-- Swing Trading Strategies -->
+                            <div class="card">
+                                <h3>Swing Trading</h3>
+                                <div class="mb-4">
+                                    <label for="swingStrategies" class="block text-gray-700 text-sm font-bold mb-2">Strategies</label>
+                                    <textarea id="swingStrategies" rows="4" placeholder="e.g., Trend following, breakout trading, mean reversion.">${strategiesAndRules.swingTrading.strategies}</textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="swingRules" class="block text-gray-700 text-sm font-bold mb-2">Rules</label>
+                                    <textarea id="swingRules" rows="4" placeholder="e.g., EMA Alignment, Volume Spike, Breakout/Breakdown levels, Pre-defined Target Price & Stop Loss, Favorable R:R (e.g., 1:2+).">${strategiesAndRules.swingTrading.rules}</textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="swingNotes" class="block text-gray-700 text-sm font-bold mb-2">Notes/Goals</label>
+                                    <textarea id="swingNotes" rows="3" placeholder="e.g., Journaling trades, post-trade analysis. Capture short-to-medium term price movements (days to weeks).">${strategiesAndRules.swingTrading.notes}</textarea>
+                                </div>
+                            </div>
+
+                            <!-- Day Trading Strategies -->
+                            <div class="card">
+                                <h3>Day Trading</h3>
+                                <div class="mb-4">
+                                    <label for="dayStrategies" class="block text-gray-700 text-sm font-bold mb-2">Strategies</label>
+                                    <textarea id="dayStrategies" rows="4" placeholder="e.g., Scalping, momentum trading, range trading.">${strategiesAndRules.dayTrading.strategies}</textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="dayRules" class="block text-gray-700 text-sm font-bold mb-2">Rules</label>
+                                    <textarea id="dayRules" rows="4" placeholder="e.g., Strict Daily Max Loss (e.g., ₹3000). Document Action Triggered (Entry Criteria Met, SL Hit, Target Hit, Time-Based Exit, Manual Exit). Intraday EMA Alignment, Volume Spike confirmation. Maintain positive R:R.">${strategiesAndRules.dayTrading.rules}</textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="dayNotes" class="block text-gray-700 text-sm font-bold mb-2">Notes/Goals</label>
+                                    <textarea id="dayNotes" rows="3" placeholder="e.g., Focus on discipline, quick decision-making, managing emotions. Trades closed within the day.">${strategiesAndRules.dayTrading.notes}</textarea>
+                                </div>
+                            </div>
+
+                            <!-- Business Fund Strategies -->
+                            <div class="card">
+                                <h3>Business Fund</h3>
+                                <div class="mb-4">
+                                    <label for="businessStrategies" class="block text-gray-700 text-sm font-bold mb-2">Strategies</label>
+                                    <textarea id="businessStrategies" rows="4" placeholder="e.g., Compounding, disciplined contribution.">${strategiesAndRules.businessFund.strategies}</textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="businessRules" class="block text-gray-700 text-sm font-bold mb-2">Rules</label>
+                                    <textarea id="businessRules" rows="4" placeholder="e.g., 50% of net trading profit (Swing + Day Trading P&L) goes to the business fund. Set a cumulative target (e.g., ₹300,000 - ₹500,000 by July 1, 2026).">${strategiesAndRules.businessFund.rules}</textarea>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="businessNotes" class="block text-gray-700 text-sm font-bold mb-2">Notes/Goals</label>
+                                    <textarea id="businessNotes" rows="3" placeholder="e.g., Long-term vision, diversification of income.">${strategiesAndRules.businessFund.notes}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg text-lg">Update Strategies</button>
+                    </form>
+                </div>
+            `;
+
+            document.getElementById('strategies-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                allData.strategiesAndRules.longTerm.strategies = document.getElementById('longTermStrategies').value;
+                allData.strategiesAndRules.longTerm.rules = document.getElementById('longTermRules').value;
+                allData.strategiesAndRules.longTerm.notes = document.getElementById('longTermNotes').value;
+
+                allData.strategiesAndRules.swingTrading.strategies = document.getElementById('swingStrategies').value;
+                allData.strategiesAndRules.swingTrading.rules = document.getElementById('swingRules').value;
+                allData.strategiesAndRules.swingTrading.notes = document.getElementById('swingNotes').value;
+
+                allData.strategiesAndRules.dayTrading.strategies = document.getElementById('dayStrategies').value;
+                allData.strategiesAndRules.dayTrading.rules = document.getElementById('dayRules').value;
+                allData.strategiesAndRules.dayTrading.notes = document.getElementById('dayNotes').value;
+
+                allData.strategiesAndRules.businessFund.strategies = document.getElementById('businessStrategies').value;
+                allData.strategiesAndRules.businessFund.rules = document.getElementById('businessRules').value;
+                allData.strategiesAndRules.businessFund.notes = document.getElementById('businessNotes').value;
+
+                saveData();
+                alert("Strategies and rules updated successfully!");
+                // No need to re-render the whole tab, as the values are already in the textareas
+            });
+        }
+
+        // --- Tab Management ---
+        const tabContents = {
+            dashboard: renderDashboard,
+            longTerm: renderLongTermInvestments,
+            swingTrading: renderSwingTrading,
+            dayTrading: renderDayTrading,
+            businessFund: renderBusinessFund,
+            analytics: renderAnalytics,
+            strategiesAndRules: renderStrategiesAndRules, // New tab
+        };
+
+        function activateTab(tabName) {
+            document.querySelectorAll('#main-nav button').forEach(button => {
+                if (button.dataset.tab === tabName) {
+                    button.classList.add('active');
+                } else {
+                    button.classList.remove('active');
+                }
+            });
+            tabContents[tabName](); // Render the content for the active tab
+            saveData(); // Save data after rendering to ensure latest state is persisted
+        }
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData(); // Load data on startup
+            const initialTab = localStorage.getItem('activeTab') || 'dashboard';
+            activateTab(initialTab); // Activate the last active tab or dashboard
+
+            document.querySelectorAll('#main-nav button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const tabName = e.target.dataset.tab;
+                    localStorage.setItem('activeTab', tabName); // Remember active tab
+                    activateTab(tabName);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
